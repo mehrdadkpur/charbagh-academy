@@ -1,0 +1,239 @@
+'use client'
+
+import Link from 'next/link'
+import { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import { useParams, useRouter } from 'next/navigation'
+import Loading from '@/app/loading'
+import UploadInput from '@/app/ui/components/UploadInput'
+import { IPhoto } from '@/lib/types'
+import ShamsiDatePicker from '@/app/ui/components/ShamsiDatePicker'
+import toast from 'react-hot-toast'
+
+const EditPhotoForm = () => {
+    const { id } = useParams()
+    const router = useRouter()
+    
+    const [fields, setFields] = useState<IPhoto>({
+      id: 0,
+      title: "",
+      url: "",
+      photoDate: "",
+      description: "",
+      category:{id:0 , category_name:""},
+      createdAt:"",
+      updatedAt:""
+    });
+    const [loading, setLoading] = useState(true)
+    const [error, setError] = useState('')
+    const [categories, setCategories] = useState<{ id: number; category_name: string }[]>([]);
+    const [uploading, setUploading] = useState(false)
+    const [imagePreview, setImagePreview] = useState<string>("");
+
+    useEffect(() => {
+      const fetchPhoto = async () => {
+        try {
+          const response = await fetch(`/api/galleries/photos/${id}`);
+          const data = await response.json();
+    
+          setFields((prev) => ({
+            ...prev,
+            ...data,
+            category: data.category || { id: 0, category_name: "" },
+          }));
+        } catch (error) {
+          console.error("Error fetching Photo:", error);
+          setError("Failed to fetch photo data");
+        } finally {
+          setLoading(false);
+        }
+      };
+    
+      if (id) fetchPhoto();
+    }, [id]);
+    
+    useEffect(() => { 
+        setImagePreview(fields.url)
+    }, [fields.url])
+
+    useEffect(() => {
+      const fetchCategories = async () => {
+          const response = await fetch('/api/categories')
+          const data = await response.json();
+          setCategories(data);
+  
+      }
+  
+      fetchCategories()
+  }, [])
+
+    const handleDateChange = (gregorianDate: string) => {
+      setFields(prev => ({ ...prev, photoDate: gregorianDate }))
+    }
+
+    const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      const { name, value } = e.target;
+    
+      if (name === "category") {
+        const selectedCategory = categories.find((cat) => cat.id === parseInt(value));
+        if (selectedCategory) {
+          setFields((prev) => ({
+            ...prev,
+            category: {
+              id: selectedCategory.id,
+              category_name: selectedCategory.category_name,
+            },
+          }));
+        }
+      } else {
+        setFields((prev) => ({ ...prev, [name]: value }));
+      }
+    };
+    
+
+    const handlePhotoUpdate = async (e:ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+  
+      // Preview image
+      const reader = new FileReader()
+      reader.onloadend = () => {
+          setImagePreview(reader.result as string)
+      }
+      reader.readAsDataURL(file)
+  
+      
+      
+      setUploading(true);
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("title", fields.title);
+      formData.append("id", fields.id.toString());
+      
+      // Only append previousUrl if it exists and is not empty
+      if (fields.url) {
+       formData.append('previousUrl', fields.url);
+   }
+      try {
+        const response = await fetch("/api/galleries/upload-gallery-photo", {
+          method: "POST",
+          body: formData,
+        });
+  
+        const data = await response.json();
+        if (data.url) {
+          setFields((prev) => ({ ...prev, url: data.url }));
+        }
+      } catch (error) {
+        console.error("Upload failed:", error);
+      } finally {
+        setUploading(false);
+      }
+    };
+
+    const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+        e.preventDefault()
+        try {
+            const response = await fetch(`/api/galleries/photos/${id}`, {
+              method: 'PUT',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify(fields),
+            })
+            
+            if (response.ok) {
+                router.push('/dashboard/galleries/photos');
+                toast.success("ویرایش عکس موفقیت آمیز بود")
+            } else {
+                throw new Error('Failed to update Photo')
+            }
+        } catch (error) {
+            console.error('Error updating Photo:', error)
+            setError('Failed to update photo')
+        }
+    }
+
+    if (loading) return <Loading />
+    if (error) return <p>{error}</p>
+
+    return (
+      <form onSubmit={handleSubmit} className="w-full flex justify-center items-start flex-col gap-y-5">
+      <div className="w-full flex justify-center items-center gap-x-2">
+        <label className="w-1/3" htmlFor="title">
+          نام عکس:
+        </label>
+        <input
+          name="title"
+          type="text"
+          className="w-full h-12 border p-3 bg-gray-50 dark:bg-gray-700"
+          placeholder="نام عکس"
+          required
+          value={fields.title}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="w-full flex justify-center items-center gap-x-2">
+        <label className="w-1/3" htmlFor="description">
+          {" "}
+          توضیحات:
+        </label>
+        <input
+          name="description"
+          type="text"
+          className="w-full h-12 border p-3 bg-gray-50 dark:bg-gray-700"
+          placeholder=" توضیحات"
+          required
+          value={fields.description}
+          onChange={handleChange}
+        />
+      </div>
+      <div className="w-full flex justify-center items-center gap-x-2 ">
+        <label className="w-1/3">تاریخ تهیه عکس:</label>
+        <div className="w-2/3">
+        <ShamsiDatePicker
+        onBirthDateChange={handleDateChange}
+        initialDate={fields.photoDate ? new Date(fields.photoDate) : new Date()}
+        fieldName="photoDate"
+      />
+      </div>
+      </div> 
+      <div className="w-full flex justify-center items-center gap-x-2">
+          <label className="w-1/3" htmlFor="category">
+            دسته بندی :
+          </label>
+        <select
+    name="category"
+    className="w-2/3 h-12 border p-3 bg-gray-50 dark:bg-gray-700"
+    required
+    value={fields.category?.id || ""}
+    onChange={handleChange}
+    disabled={categories.length === 0}
+  >
+    <option value="">دسته بندی</option>
+    {categories.map((category) => (
+      <option key={category.id} value={category.id}>
+        {category.category_name}
+      </option>
+    ))}
+        </select>
+         
+        </div>
+      <UploadInput uploadedImage={imagePreview} handleImageUpload={handlePhotoUpdate} uploading={uploading} />
+      <div className="w-1/2 flex justify-center items-center flex-col gap-y-3">
+        <button
+          type="submit"
+          className="w-full p-3 bg-green-600 rounded-lg text-center text-white hover:bg-green-700 transition-colors"
+        >
+          ویرایش عکس
+        </button>
+        <Link
+          href="/dashboard/galleries/photos"
+          className="w-full p-3 bg-red-600 rounded-lg text-center text-white hover:bg-red-700 transition-colors"
+        >
+          انصراف
+        </Link>
+      </div>
+    </form>
+     );
+ }
+ export default EditPhotoForm;

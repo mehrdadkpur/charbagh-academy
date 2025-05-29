@@ -1,0 +1,245 @@
+generator client {
+  provider   = "prisma-client-js"
+  engineType = "binary"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+enum Gender {
+  MALE
+  FEMALE
+  OTHER
+}
+
+enum Origin {
+  WESTREN
+  EASTREN
+  PERSIAN
+}
+
+enum InsType {
+  STRING
+  WIND
+  PERCUSSION
+  KEYBOARD
+  ELECTRIC
+}
+
+enum Status {
+  ACTIVE
+  DEACTIVE
+  PENDING
+  SUSPENDED
+}
+
+enum Role {
+  TEACHER
+  STUDENT
+  GUEST
+  ADMIN
+}
+
+model User {
+  id                 Int                 @id @default(autoincrement())
+  firstname          String              @db.VarChar(255)
+  lastname           String              @db.VarChar(255)
+  mobile             String              @unique @db.VarChar(11)
+  nationality_number String              @unique @db.VarChar(10)
+  identity_number    String              @unique @db.VarChar(6)
+  gender             Gender
+  email              String              @unique @db.VarChar(255)
+  birthdate          DateTime            @db.Date
+  registry_date      DateTime            @db.Date
+  password           String?             @db.VarChar(255)
+  status             Status
+  isAdmin            Int                 @default(0)
+  role               Role
+  resume             String?             @db.VarChar(255)
+  user_img           String?             @db.VarChar(255)
+  skill              Instrument?         @relation("UserSkill", fields: [skillId], references: [id])
+  skillId            Int?
+  address            String?             @db.VarChar(255)
+  courses            Course[]            @relation("UserCourses")
+  blogs              Blog[]
+  instrument_teacher InstrumentTeacher[]
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+
+  @@map("users")
+}
+
+model Blog {
+  id         Int      @id @default(autoincrement())
+  blog_title String   @db.VarChar(255)
+  blog_text  String   @db.Text
+  blog_img   String?  @db.VarChar(255)
+  authorId   Int
+  author     User     @relation(fields: [authorId], references: [id])
+  status     Status   @default(PENDING)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("blogs")
+}
+
+model Comment {
+  id             Int      @id @default(autoincrement())
+  comment_author String   @db.VarChar(45)
+  comment_text   String   @db.Text
+  comment_date   DateTime @default(now())
+
+  @@map("comments")
+}
+
+model Course {
+  id                 Int        @id @default(autoincrement())
+  course_name        String
+  course_status      String
+  course_img         String
+  course_description String     @db.Text
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
+  instrumentId       Int
+  teacherId          Int
+  teacher            User       @relation("UserCourses", fields: [teacherId], references: [id])
+  instrument         Instrument @relation(fields: [instrumentId], references: [id])
+
+  @@map("courses")
+}
+
+model Guidance {
+  id        Int      @id @default(autoincrement())
+  fullname  String   @db.VarChar(255)
+  mobile    String   @db.VarChar(45)
+  status    Status
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("guidances")
+}
+
+model Instrument {
+  id                     Int                 @id @default(autoincrement())
+  instrument_name        String              @db.VarChar(255)
+  instrument_type        InsType
+  instrument_origin      Origin
+  instrument_description String?             @db.Text
+  instrument_img         String?             @db.VarChar(255)
+  instrument_teachers    InstrumentTeacher[]
+  books                  InstrumentBook[]
+  courses                Course[]
+  skilledUsers           User[]              @relation("UserSkill")
+  createdAt              DateTime            @default(now())
+  updatedAt              DateTime            @updatedAt
+  SongInstrument         SongInstrument[]
+
+  @@map("instruments")
+}
+
+model InstrumentTeacher {
+  id           Int        @id @default(autoincrement())
+  instrument   Instrument @relation(fields: [instrumentId], references: [id])
+  instrumentId Int
+  teacher      User       @relation(fields: [teacherId], references: [id])
+  teacherId    Int
+
+  @@map("instrument_teachers")
+}
+
+model Song {
+  id             Int              @id @default(autoincrement())
+  song_title     String           @db.VarChar(255)
+  song_artist    String           @db.VarChar(255)
+  song_url       String           @db.VarChar(255)
+  book           Book             @relation(fields: [bookId], references: [id])
+  bookId         Int
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  SongInstrument SongInstrument[]
+
+  @@map("songs")
+}
+
+model SongInstrument {
+  id           Int        @id @default(autoincrement())
+  instrument   Instrument @relation(fields: [instrumentId], references: [id])
+  instrumentId Int
+  song         Song       @relation(fields: [songId], references: [id])
+  songId       Int
+
+  @@map("song_instruments")
+}
+
+model Book {
+  id          Int              @id @default(autoincrement())
+  book_name   String           @db.VarChar(255)
+  instruments InstrumentBook[]
+  songs       Song[]
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  @@map("books")
+}
+
+model InstrumentBook {
+  id           Int        @id @default(autoincrement())
+  instrument   Instrument @relation(fields: [instrumentId], references: [id])
+  instrumentId Int
+  book         Book       @relation(fields: [bookId], references: [id])
+  bookId       Int
+
+  @@map("instrument_books")
+}
+
+model Photo {
+  id          Int      @id @default(autoincrement())
+  title       String   @db.VarChar(255)
+  url         String   @db.VarChar(255)
+  description String?  @db.Text
+  categoryId  Int
+  category    Category @relation(fields: [categoryId], references: [id])
+  photoDate   DateTime @default(now())
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("photos")
+}
+
+model Video {
+  id          Int       @id @default(autoincrement())
+  title       String?   @db.VarChar(255)
+  url         String?   @db.VarChar(255)
+  description String?   @db.Text
+  categoryId  Int
+  category    Category  @relation(fields: [categoryId], references: [id])
+  videoDate   DateTime? @db.Date
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  @@map("videos")
+}
+
+model Gallery {
+  id           Int      @id @default(autoincrement())
+  gallery_name String   @db.VarChar(45)
+  gallery_img  String   @db.VarChar(255)
+  gallery_href String?  @db.VarChar(255)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("galleries")
+}
+
+model Category {
+  id            Int      @id @default(autoincrement())
+  category_name String?  @db.VarChar(255)
+  photos        Photo[]
+  videos        Video[]
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  @@map("categories")
+}
