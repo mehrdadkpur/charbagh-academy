@@ -12,7 +12,7 @@ const Footer = () => {
                     <div className=" grid grid-cols-1 md:grid-cols-4 md:my-10 gap-x-7 gap-y-5">
                         <div className="flex justify-center items-center flex-col gap-y-5">
                             <div className="">
-                                <Image width={80} height={80} src="/images/logo.png" alt="logo" />
+                                <Image width={80} height={80} src="/images/logo.png" className="w-auto h-auto" alt="logo" />
                                 </div>
                             <div className="md:text-2xl lg:text-3xl text-[#F6F4EE] font-MorabbaBold text-center flex justify-center items-center">آمـوزشگاه موسیقـی <span className=" bg-mango md:py-2 px-2 rounded-2xl text-greenDark">چهــــاربـــاغ</span></div>
                         </div>

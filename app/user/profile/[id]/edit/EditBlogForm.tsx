@@ -30,7 +30,7 @@ const EditBlogForm = () => {
     useEffect(() => {
         const fetchBlog = async () => {
             try {
-                const response = await fetch(`/api/blogs/${id}`);
+                const response = await fetch(`/api/user/blogs/${id}`);
                 const data = await response.json();
                 setFields(data);
                 setLoading(false);
@@ -58,7 +58,7 @@ const EditBlogForm = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         try {
-            const response = await fetch(`/api/blogs/${id}`, {
+            const response = await fetch(`/api/user/blogs/${id}`, {
                 method: 'PUT',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(fields)

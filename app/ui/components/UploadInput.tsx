@@ -22,7 +22,7 @@ const UploadInput = ({uploading , handleImageUpload , uploadedImage}:UploadProps
         <div className="w-32 h-32 flex justify-center items-center ">
             {
                 uploadedImage && 
-            <Image width={128} height={128} src={uploadedImage} alt="uploadImage" className="rounded-full" />   
+            <Image width={40} height={40} src={uploadedImage} alt="uploadImage" className="rounded-full" />   
             }
         </div>
       </div>

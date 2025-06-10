@@ -6,20 +6,13 @@ import Image from "next/image";
 import Link from "next/link";
 import { ChangeEvent, useEffect, useState } from "react";
 import { IUser } from "@/lib/types";
+import {fetchFullTeachers} from "@/lib/requests"
 import StatusBadge from "@/app/ui/components/StatusBadge";
 import Swal from "sweetalert2";
 
 interface QueryState {
   text: string;
 }
-
-const getTeachers = async () => {
-  const response = await fetch("/api/teachers");
-  if (!response.ok) {
-    throw new Error("Failed to fetch teachers");
-  }
-  return response.json();
-};
 
 const Teachers = () => {
   const [teachers, setTeachers] = useState<IUser[]>([]);
@@ -28,7 +21,7 @@ const Teachers = () => {
 
   useEffect(() => {
     const loadTeachers = async () => {
-      const data = await getTeachers();
+      const data = await fetchFullTeachers();
       setTeachers(data.teachers);
       setFilteredTeachers(data.teachers);
     };
@@ -49,7 +42,7 @@ const Teachers = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/api/teachers/${teacherId}`, {
+        const res = await fetch(`/api/admin/teachers/${teacherId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

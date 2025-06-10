@@ -29,7 +29,7 @@ export default function PhotoGallery() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const response = await fetch('/api/categories')
+            const response = await fetch('/api/public/categories')
             const data = await response.json()
 
             // Use only category names as strings

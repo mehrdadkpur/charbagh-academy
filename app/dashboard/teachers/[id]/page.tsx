@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState,useEffect } from "react";
-import { fetchTeacher } from "@/lib/requests";
+import { fetchFullTeacher } from "@/lib/requests";
 import Loading from "@/app/loading";
 import jalaali from 'jalaali-js'
 import Image from "next/image";
@@ -20,7 +20,7 @@ const ViewTeacher = () => {
         const fetchTeacherData = async ()=>{
             if(!id) return;
            try{
-               const teacher = await fetchTeacher(id as string)
+               const teacher = await fetchFullTeacher(id as string)
                setTeacher(teacher);
                
            } catch(error){

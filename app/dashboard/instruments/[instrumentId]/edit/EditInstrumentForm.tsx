@@ -36,7 +36,7 @@ const EditInstrumentForm = () => {
   useEffect(() => {
     const fetchInstrument = async () => {
       try {
-        const res = await fetch(`/api/instruments/${instrumentId}`);
+        const res = await fetch(`/api/admin/instruments/${instrumentId}`);
         if (!res.ok) throw new Error('Failed to fetch instrument');
         const data = await res.json();
 
@@ -117,7 +117,7 @@ const EditInstrumentForm = () => {
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
-      const res = await fetch(`/api/instruments/${instrumentId}`, {
+      const res = await fetch(`/api/admin/instruments/${instrumentId}`, {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

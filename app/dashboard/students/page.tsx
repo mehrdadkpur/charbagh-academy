@@ -38,7 +38,7 @@ const Students = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/api/students/${studentId}`, {
+        const res = await fetch(`/api/admin/students/${studentId}`, {
           method: "DELETE",
           headers: {
             "Content-Type": "application/json",

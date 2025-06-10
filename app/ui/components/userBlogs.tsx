@@ -33,7 +33,7 @@ export default function UserBlogsPage({ user }: { user: IUser }) {
     if (!user?.id) return;
     const fetchBlogs = async () => {
       try {
-        const res = await fetch(`/api/blogs/user?authorId=${user.id}`);        
+        const res = await fetch(`/api/user/blogs/user?authorId=${user.id}`);        
 
         const data = await res.json();
         
@@ -69,7 +69,7 @@ export default function UserBlogsPage({ user }: { user: IUser }) {
 
         
         try {
-            const res = await fetch(`/api/blogs/${blogId}`, {
+            const res = await fetch(`/api/user/blogs/${blogId}`, {
                 method: "DELETE"
             })
             

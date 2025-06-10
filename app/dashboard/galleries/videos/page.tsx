@@ -7,6 +7,7 @@ import { useEffect, useState } from "react"
 import { IVideo } from "@/lib/types";
 import { shamsiDate } from "@/lib/shamsiDate";
 import Swal from "sweetalert2";
+import { fetchAllVideos } from "@/lib/requests";
 
 
 const Videos = () => {
@@ -16,9 +17,7 @@ const Videos = () => {
 
     useEffect(() => {
         const fetchVideosData = async () => {
-            const response = await fetch("/api/galleries/videos")
-            
-            const data = await response.json();
+            const data = await fetchAllVideos()
             setVideos(data); 
             setFilteredVideos(data);
         }
@@ -39,7 +38,7 @@ const Videos = () => {
   
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/api/galleries/videos/${videoId}`, {
+        const res = await fetch(`/api/admin/galleries/videos/${videoId}`, {
           method: "DELETE",
         });
   

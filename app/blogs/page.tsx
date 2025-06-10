@@ -6,8 +6,8 @@ import Image from "next/image";
 import { IBlog } from "@/lib/types";
 
 export const metadata = {
-    title: 'آموزشگاه چهارباغ |خبرنامه',
-    description: 'این صفحه خبرنامه و رویدادهای مهم آموزشگاه موسیقی چهارباغ است.',
+    title: 'آموزشگاه چهارباغ | پست ها',
+    description: 'این صفحه پست ها و خبرنامه و رویدادهای مهم آموزشگاه موسیقی چهارباغ است.',
   };
 
 const Blogs = async () => {

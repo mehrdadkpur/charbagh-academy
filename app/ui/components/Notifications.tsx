@@ -46,7 +46,7 @@ const Notifications = () => {
 
   const updateGuidanceStatus = async (id: number) => {
     try {
-      const res = await fetch(`/api/guidances/${id}`, {
+      const res = await fetch(`/api/admin/guidances/${id}`, {
         method: "PUT",
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ status: "DEACTIVE" }),
@@ -64,17 +64,6 @@ const Notifications = () => {
       toast.error('خطا در بروزرسانی وضعیت');
     }
   };
-
-  const renderPanel = (title: string, children: React.ReactNode) => (
-    <div className="absolute -right-28 mt-2 w-56 rounded-xl bg-white dark:bg-gray-900 shadow-lg ring-1 ring-black ring-opacity-5 z-50">
-      <div className="py-2">
-        <h4 className="text-xs sm:text-sm font-DanaMedium px-4 py-2 text-gray-700 dark:text-gray-200 border-b border-gray-200 dark:border-gray-700">
-          {title}
-        </h4>
-        <div className="flex flex-col max-h-[60vh] sm:max-h-80 overflow-y-auto">{children}</div>
-      </div>
-    </div>
-  );
 
   return (
     <div className="relative font-Dana" ref={notificationRef}>

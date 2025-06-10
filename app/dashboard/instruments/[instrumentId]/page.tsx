@@ -73,7 +73,7 @@ const Books = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/api/instruments/${instrumentId}/books/${bookId}`, {
+        const res = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}`, {
           method: "DELETE",
         })
 

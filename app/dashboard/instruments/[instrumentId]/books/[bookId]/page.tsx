@@ -2,16 +2,16 @@
 
 import Link from "next/link"
 import { useParams } from "next/navigation"
-import { useState, useEffect, ChangeEvent } from "react"
+import { useState, useEffect, ChangeEvent, useCallback } from "react"
 import { fetchSongs } from "@/lib/requests"
 import Loading from "@/app/loading"
-import AudioPlayer from "@/app/ui/components/AudioPlayer"
 import Search from "@/app/ui/components/Search"
 import AddButton from "@/app/ui/components/AddButton"
 import toast from "react-hot-toast"
 import Image from "next/image"
 import Swal from "sweetalert2"
 import { Instrument, ISong, IBook } from "@/lib/types"
+import AudioPlayerModal from "@/app/ui/components/AudioPlayerModal"
 
 
 interface QueryState {
@@ -27,7 +27,11 @@ const Songs = () => {
   const [instrument, setInstrument] = useState<(Instrument & { currentBook?: IBook }) | null>(null)
   const [loading, setLoading] = useState(true)
   const [query, setQuery] = useState<QueryState>({ text: "" })
-  const [filteredSongs, setFilteredSongs] = useState<ISong[]>([])
+  const [filteredSongs, setFilteredSongs] = useState<ISong[]>([]);
+  const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [selectedSong, setSelectedSong] = useState(null);
+
+
 
   useEffect(() => {
     const fetchSongData = async () => {
@@ -64,6 +68,11 @@ const Songs = () => {
     setFilteredSongs(allSongs)
   }
 
+  const handleSongClick = useCallback((song) => {
+    setSelectedSong(song);
+    setModalIsOpen(true);
+}, []);
+
   const handleDeleteSong = async (songId: number) => {
     const result = await Swal.fire({
       title: "آیا مطمئنی؟",
@@ -78,7 +87,7 @@ const Songs = () => {
 
     if (result.isConfirmed) {
       try {
-        const res = await fetch(`/api/instruments/${instrumentId}/books/${bookId}/songs/${songId}`, {
+        const res = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}/songs/${songId}`, {
           method: "DELETE",
         })
 
@@ -94,6 +103,10 @@ const Songs = () => {
       }
     }
   }
+
+  const closeModal = useCallback(() => {
+    setModalIsOpen(false);
+}, []);
 
   if (loading) return <Loading />
  
@@ -138,7 +151,12 @@ const Songs = () => {
                       </td>
                       <td className="px-6 py-4">{song.song_artist}</td>
                       <td className="px-6 py-4">
-                      <AudioPlayer songUrl={`/api/stream/${song.song_url?.split('/').pop()}`} />
+                      <div key={song.id} onClick={() => handleSongClick(song)} className=" flex justify-center p-3 cursor-pointer md:hover:bg-slate-200 rounded-xl shadow-sm">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M5.25 5.653c0-.856.917-1.398 1.667-.986l11.54 6.347a1.125 1.125 0 0 1 0 1.972l-11.54 6.347a1.125 1.125 0 0 1-1.667-.986V5.653Z" />
+                        </svg>
+                      </div>
+                      <AudioPlayerModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedSong={selectedSong}/>
                       </td>
                       <td className="px-6 py-4 flex justify-center gap-2">
                         <Link

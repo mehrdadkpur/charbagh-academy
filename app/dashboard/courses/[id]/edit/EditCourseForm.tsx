@@ -6,8 +6,9 @@ import toast from "react-hot-toast";
 import Swal from "sweetalert2";
 import UploadInput from "@/app/ui/components/UploadInput";
 import { IUser, Instrument, ICourse } from "@/lib/types";
-import { fetchTeachers, fetchInstruments } from "@/lib/requests";
+import { fetchTeachers, fetchFullInstruments } from "@/lib/requests";
 import Loading from "@/app/loading";
+import Link from "next/link";
 
 const EditCourseForm = () => {
   const { id } = useParams();
@@ -33,42 +34,42 @@ const EditCourseForm = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const [courseResponse, teachersData, instrumentData] = await Promise.all([
-          fetch(`/api/courses/${id}`),
+        const [courseRes, teacherData, instrumentData] = await Promise.all([
+          fetch(`/api/admin/courses/${id}`),
           fetchTeachers(),
-          fetchInstruments(),
+          fetchFullInstruments(),
         ]);
-  
-        const courseData = await courseResponse.json();
 
-        if (!courseResponse.ok) {
+        const courseData = await courseRes.json();
+        console.log(courseData);
+        
+        if (!courseRes.ok) {
           toast.error(courseData.error || "خطا در دریافت اطلاعات دوره");
           return;
         }
-  
+
         setCourse(courseData);
-        setTeachers(teachersData.teachers);
+        setTeachers(teacherData.teachers);
         setInstruments(instrumentData.instruments);
         setFields({
           course_name: courseData.course_name || "",
-          instrument: courseData.instrumentId?.toString() || "",
+          instrument: courseData.instrument.id?.toString() || "",
           course_description: courseData.course_description || "",
           course_img: courseData.course_img || "/images/avatar.png",
           course_status: courseData.course_status || "ACTIVE",
           teacher: courseData.teacher?.id?.toString() || "",
         });
         setImagePreview(courseData.course_img || "/images/avatar.png");
-  
-      } catch (error) {
+      } catch (err) {
         toast.error("خطا در دریافت اطلاعات");
       } finally {
         setLoading(false);
       }
     };
-  
+
     if (id) fetchData();
   }, [id]);
-  
+
   const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
     const { name, value } = e.target;
     setFields((prev) => ({ ...prev, [name]: value }));
@@ -94,14 +95,14 @@ const EditCourseForm = () => {
         instrument: fields.instrument,
       };
 
-      const response = await fetch(`/api/courses/${id}`, {
+      const res = await fetch(`/api/admin/courses/${id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
-      if (response.ok) {
+      const data = await res.json();
+      if (res.ok) {
         await Swal.fire({
           title: "ویرایش موفق!",
           text: "دوره با موفقیت به‌روزرسانی شد.",
@@ -124,6 +125,7 @@ const EditCourseForm = () => {
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
     const reader = new FileReader();
     reader.onloadend = () => {
       setFields((prev) => ({ ...prev, course_img: reader.result as string }));
@@ -136,24 +138,30 @@ const EditCourseForm = () => {
     formData.append("title", fields.course_name);
 
     try {
-      const response = await fetch("/api/courses/upload-course-image", {
+      const res = await fetch("/api/admin/courses/upload-course-image", {
         method: "POST",
         body: formData,
       });
-      const data = await response.json();
+
+      const data = await res.json();
       if (data.url) {
         setFields((prev) => ({ ...prev, course_img: data.url }));
         setImagePreview(data.url);
         toast.success("تصویر با موفقیت آپلود شد");
       }
-    } catch (error) {
+    } catch (err) {
       toast.error("خطا در آپلود تصویر");
     } finally {
       setUploading(false);
     }
   };
 
-  if (loading) return <Loading/>;
+  if (loading || !course || teachers.length === 0 || instruments.length === 0) {
+    return <Loading />;
+  }
+
+  console.log();
+  
 
   return (
     <form onSubmit={handleSubmit} className="w-full flex flex-col gap-y-5 font-Dana">
@@ -196,7 +204,7 @@ const EditCourseForm = () => {
           className="w-2/3 h-12 border p-3"
           required
         >
-         <option value="">انتخاب مدرس</option>
+          <option value="">انتخاب مدرس</option>
           {teachers.map((t) => (
             <option key={t.id} value={t.id.toString()}>
               {t.firstname} {t.lastname}
@@ -205,7 +213,7 @@ const EditCourseForm = () => {
         </select>
       </div>
 
-      <div className="flex gap-x-2 items-center">
+      <div className="flex gap-x-2 items-start">
         <label className="w-1/3">درباره:</label>
         <textarea
           name="course_description"
@@ -230,19 +238,34 @@ const EditCourseForm = () => {
         </select>
       </div>
 
-      <UploadInput
-        uploadedImage={imagePreview}
-        handleImageUpload={handleImageUpload}
-        uploading={uploading}
-      />
+      {/* تصویر دوره */}
+      <div className="flex gap-x-2 items-start">
+        <label className="w-1/3">تصویر دوره:</label>
+        <div className="flex flex-col items-start gap-y-2">
+          <UploadInput
+            uploadedImage={imagePreview}
+            handleImageUpload={handleImageUpload}
+            uploading={uploading}
+          />
+        </div>
+      </div>
 
       <button
         type="submit"
         disabled={submitting}
-        className={`p-3 rounded-lg text-white ${submitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"}`}
+        className={`p-3 rounded-lg text-white ${
+          submitting ? "bg-gray-400" : "bg-blue-600 hover:bg-blue-700"
+        }`}
       >
         {submitting ? "در حال ذخیره..." : "ذخیره تغییرات"}
       </button>
+
+      <Link
+        href="/dashboard/courses"
+        className="w-full flex justify-center items-center p-3 rounded-lg text-white bg-red-600 hover:bg-red-700"
+      >
+        بازگشت به صفحه دوره‌ها
+      </Link>
     </form>
   );
 };

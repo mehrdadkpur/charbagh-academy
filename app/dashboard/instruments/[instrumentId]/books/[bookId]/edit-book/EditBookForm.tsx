@@ -22,7 +22,7 @@ const EditBookForm = () => {
     useEffect(() => {
         const fetchBook = async () => {
             try {
-                const response = await fetch(`/api/instruments/${instrumentId}/books/${bookId}`)
+                const response = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}`)
                 const data = await response.json();
                 
                 setFields(data.book)
@@ -46,7 +46,7 @@ const EditBookForm = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const response = await fetch(`/api/instruments/${instrumentId}/books/${bookId}`, {
+            const response = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

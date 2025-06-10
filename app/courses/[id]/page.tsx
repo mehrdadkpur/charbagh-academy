@@ -54,8 +54,8 @@ const Course = () => {
                 <div className="content flex justify-center items-center flex-col">
                     <div className="w-[85%] md:w-auto flex justify-center items-center p-4 absolute -top-24 md:-top-[200px] bg-white dark:bg-gray-700 rounded-3xl">
                         <Image
-                            width={800}
-                            height={600}
+                            width={150}
+                            height={150}
                             className="rounded-3xl"
                             src={course.course_img}
                             alt={course.course_name}

@@ -4,7 +4,6 @@ import Link from "next/link"
 import { useEffect, useState, ChangeEvent } from "react"
 import Search from "@/app/ui/components/Search"
 import Image from "next/image"
-import Loading from "@/app/loading"
 import { Instrument } from "@/lib/types"
 import Swal from "sweetalert2";
 
@@ -23,7 +22,7 @@ const Instruments = () => {
         const fetchInstrumentsData = async () => {
             try {
                 setLoading(true)
-                const response = await fetch('/api/instruments')
+                const response = await fetch('/api/admin/instruments')
                 if (!response.ok) {
                     throw new Error('Failed to fetch instruments')
                 }
@@ -62,7 +61,7 @@ const Instruments = () => {
         
           if (result.isConfirmed) {
             try {
-              const res = await fetch(`/api/instruments/${instrumentId}`, {
+              const res = await fetch(`/api/admin/instruments/${instrumentId}`, {
                 method: "DELETE",
               });
         

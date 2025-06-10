@@ -45,7 +45,7 @@ const AddAdminForm = () => {
     useEffect(() => {
         const getInstruments = async () => {
             try {
-                const response = await fetch("/api/instruments");
+                const response = await fetch("/api/public/instruments");
                 if (response.ok) {
                     const data = await response.json();
                     setInstruments(data);
@@ -79,7 +79,7 @@ const AddAdminForm = () => {
       setLoading(true);
         
       try {
-        const response = await fetch("/api/admins", {
+        const response = await fetch("/api/admin/admins", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

@@ -38,7 +38,7 @@ const Contact = () => {
     if (!validateForm()) return
 
     try {
-      const response = await fetch("/api/guidances", {
+      const response = await fetch("/api/admin/guidances", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(fields),

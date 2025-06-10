@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState,useEffect } from "react";
-import { fetchPhoto } from "@/lib/requests";
+import { fetchFullPhoto } from "@/lib/requests";
 import Loading from "@/app/loading";
 import Image from "next/image";
 import { IPhoto } from "@/lib/types";
@@ -18,7 +18,7 @@ const ViewPhoto = () => {
         const fetchPhotoData = async ()=>{
             if(!id) return;
            try{
-               const photo = await fetchPhoto(id as unknown as number)
+               const photo = await fetchFullPhoto(id as unknown as number)
                setPhoto(photo);
                
            } catch(error:unknown){

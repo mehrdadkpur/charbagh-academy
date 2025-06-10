@@ -29,7 +29,7 @@ export default function Login() {
     setError('')
     
     try {
-      const res = await fetch('/api/login', {
+      const res = await fetch('/api/public/login', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData)
@@ -61,7 +61,7 @@ export default function Login() {
     <section className="h-screen bg-gray-50 dark:bg-gray-900">
       <div className="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0">
         <Link href="/" className="flex flex-col items-center gap-y-3 mb-6 text-2xl font-semibold text-gray-900 dark:text-white">
-          <Image width={75} height={75} src="/images/logo.png" alt="logo"/>
+          <Image width={75} height={75} src="/images/logo.png" className='w-auto h-auto' alt="logo"/>
           <div className="md:text-2xl lg:text-3xl text-gray-900 dark:text-gray-50 font-MorabbaBold text-center flex justify-center items-center">
             آمـوزشگاه موسیقـی <span className="bg-mango md:py-2 px-2 rounded-2xl text-greenDark">چهــــاربـــاغ</span>
           </div>

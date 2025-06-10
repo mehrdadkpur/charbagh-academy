@@ -73,7 +73,7 @@ const AddCourseForm = () => {
         instrument: fields.instrument
       };      
   
-      const response = await fetch("/api/courses", {
+      const response = await fetch("/api/admin/courses", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -103,7 +103,6 @@ const AddCourseForm = () => {
     }
   };
   
-
   const handleImageUpload = async (e: ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
@@ -119,7 +118,7 @@ const AddCourseForm = () => {
     formData.append("title", fields.course_name);
 
     try {
-      const response = await fetch("/api/courses/upload-course-image", {
+      const response = await fetch("/api/admin/courses/upload-course-image", {
         method: "POST",
         body: formData,
       });

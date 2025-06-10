@@ -2,7 +2,7 @@
 
 import Link from "next/link"
 import { ChangeEvent, useEffect, useState } from "react"
-import { fetchCourses } from "@/lib/requests"
+import { fetchFullCourses } from "@/lib/requests"
 import Search from "@/app/ui/components/Search"
 import AddButton from "@/app/ui/components/AddButton"
 import toast from "react-hot-toast"
@@ -21,7 +21,7 @@ const Courses = () => {
 
     useEffect(() => {
         const loadCourses = async () => {
-            const data = await fetchCourses()
+            const data = await fetchFullCourses()
             setFilteredCourses(data.courses)
             setCourses(data.courses)
         }
@@ -45,7 +45,7 @@ const Courses = () => {
 
             
             try {
-                const res = await fetch(`/api/courses/${courseId}`, {
+                const res = await fetch(`/api/admin/courses/${courseId}`, {
                     method: "DELETE"
                 })
                 
@@ -53,7 +53,7 @@ const Courses = () => {
                     setCourses(courses.filter((course) => course.id !== courseId))
                     toast.success('دوره با موفقیت حذف شد', { duration: 5000 })
                     
-                    const updatedCourses = await fetchCourses()
+                const updatedCourses = await fetchFullCourses()
                 setCourses(updatedCourses.courses)
                 setFilteredCourses(updatedCourses.courses)
             }
@@ -69,16 +69,16 @@ const Courses = () => {
         setQuery({ text: e.target.value })
 
         const allCourses = courses.filter((course) => {
-            const firstnameMath = course.teacher.firstname.toLowerCase().includes(searchText)             
+            const firstnameMatch = course.teacher.firstname.toLowerCase().includes(searchText)             
             const lastnameMath = course.teacher.lastname.toLowerCase().includes(searchText)             
             const courseNameMatch = course.course_name.toLowerCase().includes(searchText)
             
-            return firstnameMath || lastnameMath || courseNameMatch
+            return firstnameMatch || lastnameMath || courseNameMatch
         })
         
         setFilteredCourses(allCourses)
     }
-    
+
     return ( 
         <section className="w-full flex justify-center pr-[340px] pl-10 mt-3 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-50">
             <div className="w-full p-5 flex justify-center rounded-xl">
@@ -100,7 +100,7 @@ const Courses = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {filteredCourses?.map((course) => (
+                                {filteredCourses.map((course) => (
                                 <tr key={course.id} className="border-b dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                     <td className="px-6 py-4">
                                     <div className="flex items-center">

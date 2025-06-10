@@ -33,12 +33,11 @@ const AddSongForm = () => {
         setUploading(true)
         const formData = new FormData()
         formData.append('file', file)
-        formData.append('songTitle', fields.song_title)
         formData.append('previousSongUrl', fields.song_url)
-        formData.append('songArtist', fields.song_artist)
+
 
         try {
-            const response = await fetch('/api/instruments/upload-song', {
+            const response = await fetch('/api/admin/instruments/upload-song', {
                 method: 'POST',
                 body: formData
             })
@@ -46,6 +45,7 @@ const AddSongForm = () => {
             const data = await response.json()
             if (data.url) {
                 setFields(prev => ({ ...prev, song_url: data.url }))
+                toast.success("بارگذاری فایل صوتی موفقیت آمیز بود")
             }
         } catch (error) {
             console.error('Upload failed:', error)
@@ -57,7 +57,7 @@ const AddSongForm = () => {
     const handleSubmit = async (e:FormEvent<HTMLFormElement>) => {
       e.preventDefault()
 
-      const response = await fetch(`/api/instruments/${instrumentId}/books/${bookId}/songs`, {
+      const response = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}/songs`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(fields),

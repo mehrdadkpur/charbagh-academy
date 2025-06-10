@@ -44,7 +44,7 @@ const EditAdminForm = () => {
   useEffect(() => {
     const getInstruments = async () => {
       try {
-        const response = await fetch("/api/instruments");
+        const response = await fetch("/api/public/instruments");
         if (response.ok) {
           const data = await response.json();
           setInstruments(data);
@@ -64,7 +64,7 @@ const EditAdminForm = () => {
   useEffect(() => {
     const fetchAdmin = async () => {
       try {
-        const response = await fetch(`/api/admins/${id}`);
+        const response = await fetch(`/api/admin/admins/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch Admin data');
         }
@@ -147,7 +147,7 @@ const EditAdminForm = () => {
     
     try {
       const submitData = { ...fields };
-      const response = await fetch(`/api/admins/${id}`, {
+      const response = await fetch(`/api/admin/admins/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -29,7 +29,7 @@ const EditVideoForm = () => {
   useEffect(() => {
     const fetchVideo = async () => {
       try {
-        const response = await fetch(`/api/galleries/videos/${id}`);
+        const response = await fetch(`/api/admin/galleries/videos/${id}`);
         const data = await response.json();
         setFields(data);
         setLoading(false);
@@ -45,7 +45,7 @@ const EditVideoForm = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-      const response = await fetch('/api/categories');
+      const response = await fetch('/api/public/categories');
       const data = await response.json();
       setCategories(data);
     };
@@ -72,7 +72,6 @@ const EditVideoForm = () => {
       setFields(prev => ({...prev, videoDate: new Date(gregorianDate).toISOString() })); 
   };
   
-
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -89,7 +88,7 @@ const EditVideoForm = () => {
 
     if (result.isConfirmed) {
       try {
-        const response = await fetch(`/api/galleries/videos/${id}`, {
+        const response = await fetch(`/api/admin/galleries/videos/${id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(fields),

@@ -41,7 +41,7 @@ export default function Profile() {
   }, [])
   
   const handleLogout = async () => {
-    await fetch('/api/logout', { method: 'POST' })
+    await fetch('/api/public/logout', { method: 'POST' })
     window.location.href = '/'
   }
   

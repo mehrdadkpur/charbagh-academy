@@ -6,6 +6,7 @@ import Loading from '@/app/loading';
 import toast from 'react-hot-toast';
 import { Instrument, IUser } from '@/lib/types';
 import UserForm from '@/app/ui/components/UserForm';
+import { fetchFullTeacher } from '@/lib/requests';
 
 const EditTeacherForm = () => {
   const { id } = useParams();
@@ -44,7 +45,7 @@ const EditTeacherForm = () => {
   useEffect(() => {
     const getInstruments = async () => {
       try {
-        const response = await fetch("/api/instruments");
+        const response = await fetch("/api/admin/instruments");
         if (response.ok) {
           const data = await response.json();
           setInstruments(data);
@@ -64,12 +65,8 @@ const EditTeacherForm = () => {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const response = await fetch(`/api/teachers/${id}`);
-        if (!response.ok) {
-          throw new Error('Failed to fetch teacher data');
-        }
+        const data = await fetchFullTeacher(id as string)
         
-        const data = await response.json();
         
         // Format dates for display
         const formattedData = {
@@ -148,7 +145,7 @@ const EditTeacherForm = () => {
     
     try {
       const submitData = { ...fields };
-      const response = await fetch(`/api/teachers/${id}`, {
+      const response = await fetch(`/api/admin/teachers/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

@@ -1,11 +1,11 @@
-import { IPhoto, IUser } from "./types";
+import { IUser } from "./types";
 
 
 const apiDomain = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000' ;
 
 export async function fetchInstruments() {
     
-        const res = await fetch(`${apiDomain}/api/instruments`, {
+        const res = await fetch(`${apiDomain}/api/public/instruments`, {
             method: 'GET',
             cache: 'no-store',
             headers: {
@@ -18,9 +18,24 @@ export async function fetchInstruments() {
         return {instruments:instrumentsData}
 }
 
+export async function fetchFullInstruments() {
+    
+    const res = await fetch(`${apiDomain}/api/admin/instruments`, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json'
+        }});
+    if (!res.ok) {
+        throw new Error('Failed to Fetch Instruments');
+    }
+    const instrumentsData = await res.json();
+    return {instruments:instrumentsData}
+}
+
 export async function fetchAllBlogs() {
     
-    const res = await fetch(`${apiDomain}/api/blogs`, {
+    const res = await fetch(`${apiDomain}/api/admin/blogs`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -35,7 +50,7 @@ export async function fetchAllBlogs() {
 
 export async function fetchActiveBlogs() {
     
-    const res = await fetch(`${apiDomain}/api/blogs/active`, {
+    const res = await fetch(`${apiDomain}/api/public/blogs/active`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -50,7 +65,7 @@ export async function fetchActiveBlogs() {
 
 export async function fetchPendingBlogs() {
     
-    const res = await fetch(`${apiDomain}/api/blogs/pending`, {
+    const res = await fetch(`${apiDomain}/api/admin/blogs/pending`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -65,7 +80,7 @@ export async function fetchPendingBlogs() {
 
 export const fetchStudents = async (): Promise<IUser[]> => {
     try {
-      const response = await fetch("/api/students");
+      const response = await fetch("/api/admin/students");
       if (!response.ok) {
         throw new Error("Failed to fetch students");
       }
@@ -79,7 +94,7 @@ export const fetchStudents = async (): Promise<IUser[]> => {
 
 export const fetchAdmins = async (): Promise<IUser[]> => {
     try {
-      const response = await fetch("/api/admins");
+      const response = await fetch("/api/admin/admins");
       if (!response.ok) {
         throw new Error("Failed to fetch Admind");
       }
@@ -96,7 +111,23 @@ export async function fetchInstrument (id:number){
         if(!apiDomain){
             return null ;
         }
-        const res = await fetch(`${apiDomain}/api/instruments/${id}`);
+        const res = await fetch(`${apiDomain}/api/public/instruments/${id}`);
+            if(!res.ok){
+                throw new Error("Fail To Fetch Data");
+        }
+        return res.json();
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function fetchFullInstrument (id:number){
+    try {
+        if(!apiDomain){
+            return null ;
+        }
+        const res = await fetch(`${apiDomain}/api/admin/instruments/${id}`);
             if(!res.ok){
                 throw new Error("Fail To Fetch Data");
         }
@@ -128,7 +159,7 @@ export async function fetchTeachersName(): Promise<IUser[]> {
 
 export async function fetchComments() {
     
-    const res = await fetch(`${apiDomain}/api/comments` , {
+    const res = await fetch(`${apiDomain}/api/public/comments` , {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -142,7 +173,25 @@ export async function fetchComments() {
 } 
 
 export async function fetchCourses() {
-    const res = await fetch(`${apiDomain}/api/courses`, {
+    const res = await fetch(`${apiDomain}/api/public/courses`, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch Courses');
+    }
+
+    const coursesData = await res.json();
+    
+    return { courses: coursesData };
+}
+
+export async function fetchFullCourses() {
+    const res = await fetch(`${apiDomain}/api/admin/courses`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -160,7 +209,7 @@ export async function fetchCourses() {
 }
 
 export async function fetchGalleries() {
-    const res = await fetch(`${apiDomain}/api/galleries`, {
+    const res = await fetch(`${apiDomain}/api/public/galleries`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -178,7 +227,7 @@ export async function fetchGalleries() {
 }
 
 export async function fetchTeacher(id: string) {
-    const res = await fetch(`${apiDomain}/api/teachers/${id}`, {
+    const res = await fetch(`${apiDomain}/api/public/teachers/${id}`, {
       method: 'GET',
       cache: 'no-store',
       headers: {
@@ -192,14 +241,47 @@ export async function fetchTeacher(id: string) {
     }
     
     return await res.json();
-  } 
+}
+
+export async function fetchFullTeacher(id: string) {
+    const res = await fetch(`${apiDomain}/api/admin/teachers/${id}`, {
+      method: 'GET',
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+    
+    if (!res.ok) {
+      const errorData = await res.json().catch(() => null);
+      throw new Error(errorData?.error || `Failed to fetch teacher with ID ${id}`);
+    }
+    
+    return await res.json();
+} 
 
 export async function fetchCourse (id:string){
     try {
         if(!apiDomain){
             return null ;
         }
-        const res = await fetch(`${apiDomain}/api/courses/${id}`);
+        const res = await fetch(`${apiDomain}/api/public/courses/${id}`);
+            if(!res.ok){
+                throw new Error("Fail To Fetch Data");
+        }
+        return res.json();
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function fetchFullCourse (id:string){
+    try {
+        if(!apiDomain){
+            return null ;
+        }
+        const res = await fetch(`${apiDomain}/api/admin/courses/${id}`);
             if(!res.ok){
                 throw new Error("Fail To Fetch Data");
         }
@@ -215,7 +297,7 @@ export async function fetchStudent (id:string){
         if(!apiDomain){
             return null ;
         }
-        const res = await fetch(`${apiDomain}/api/students/${id}`);
+        const res = await fetch(`${apiDomain}/api/admin/students/${id}`);
             if(!res.ok){
                 throw new Error("Fail To Fetch Data");
         }
@@ -231,7 +313,7 @@ export async function fetchAdmin (id:string){
         if(!apiDomain){
             return null ;
         }
-        const res = await fetch(`${apiDomain}/api/admins/${id}`);
+        const res = await fetch(`${apiDomain}/api/admin/admins/${id}`);
             if(!res.ok){
                 throw new Error("Fail To Fetch Admin");
         }
@@ -247,7 +329,7 @@ async function fetchBlog (id:string){
         if(!apiDomain){
             return null;
         }
-        const res = await fetch(`${apiDomain}/api/blogs/${id}`);
+        const res = await fetch(`${apiDomain}/api/public/blogs/active/${id}`);
         if(!res.ok){
             throw new Error("Fail To Fetch Data");
         }
@@ -275,7 +357,21 @@ export async function fetchSong(id:number){
 }
 
 export async function fetchTeachers() {
-    const res = await fetch(`${apiDomain}/api/teachers`, {
+    const res = await fetch(`${apiDomain}/api/public/teachers`, {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+    if (!res.ok) {
+        throw new Error('Failed to fetch Teachers');
+    }
+    return await res.json();
+}
+
+export async function fetchFullTeachers() {
+    const res = await fetch(`${apiDomain}/api/admin/teachers`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -294,6 +390,27 @@ export async function fetchPhoto(id:number){
             return null;
         }
         const res = await fetch(`${apiDomain}/api/galleries/photos/${id}`, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                'Content-Type': 'application/json'
+            }});
+        if(!res.ok){
+            throw new Error("Fail To Fetch Data");
+        }
+        return res.json();
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+export async function fetchFullPhoto(id:number){
+    try {
+        if(!apiDomain){
+            return null;
+        }
+        const res = await fetch(`${apiDomain}/api/admin/galleries/photos/${id}`, {
             method: 'GET',
             cache: 'no-store',
             headers: {
@@ -335,7 +452,7 @@ export async function fetchBooks(id:number){
         if(!apiDomain){
             return null;
         }
-        const res = await fetch(`${apiDomain}/api/instruments/${id}`, {
+        const res = await fetch(`${apiDomain}/api/admin/instruments/${id}`, {
             method: 'GET',
             cache: 'no-store',
             headers: {
@@ -354,7 +471,7 @@ export async function fetchSongs(instrumentId: number, bookId: number) {
     try {
       if (!apiDomain) return null;
   
-      const res = await fetch(`${apiDomain}/api/instruments/${instrumentId}/books/${bookId}`, {
+      const res = await fetch(`${apiDomain}/api/admin/instruments/${instrumentId}/books/${bookId}`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -379,7 +496,7 @@ export async function fetchSongs(instrumentId: number, bookId: number) {
   }
   
 export async function fetchPhotos() {
-    const res = await fetch('/api/galleries/photos', {
+    const res = await fetch('/api/public/galleries/photos', {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -394,15 +511,62 @@ export async function fetchPhotos() {
     return res.json(); 
 }
 
-async function fetchVideos(){
-    const res = await fetch(`${apiDomain}/api/gallery/videos`);
+export async function fetchFullPhotos() {
+    const res = await fetch('/api/admin/galleries/photos', {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
     if (!res.ok) {
-      throw new Error('Failed to fetch Videos');
+        throw new Error('Failed to fetch photos');
     }
-    return res.json();
+
+    return res.json(); 
 }
+
+export async function fetchAllVideos() {
+    const res = await fetch('/api/admin/galleries/videos', {
+        method: 'GET',
+        cache: 'no-store',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    });
+
+    if (!res.ok) {
+        throw new Error('Failed to fetch Videos');
+    }
+
+    return res.json(); 
+}
+
+export async function fetchFullVideo(id:number){
+    try {
+        if(!apiDomain){
+            return null;
+        }
+        const res = await fetch(`${apiDomain}/api/admin/galleries/videos/${id}`, {
+            method: 'GET',
+            cache: 'no-store',
+            headers: {
+                'Content-Type': 'application/json'
+            }});
+        if(!res.ok){
+            throw new Error("Fail To Fetch Data");
+        }
+        return res.json();
+    } catch (error) {
+        console.log(error);
+        return null;
+    }
+}
+
+
 export async function fetchGuidances() {
-    const res = await fetch(`${apiDomain}/api/guidances`, {
+    const res = await fetch(`${apiDomain}/api/admin/guidances`, {
         method: 'GET',
         cache: 'no-store',
         headers: {
@@ -415,4 +579,4 @@ export async function fetchGuidances() {
     return await res.json();
 }
 
-export { fetchBlog  , fetchVideos  };
+

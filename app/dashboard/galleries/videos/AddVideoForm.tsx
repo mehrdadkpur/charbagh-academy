@@ -24,7 +24,7 @@ const AddVideoForm = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-        const response = await fetch('/api/categories')
+        const response = await fetch('/api/public/categories')
         const data = await response.json();
         setCategories(data);
 
@@ -82,7 +82,7 @@ const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
   }    
 
   try {
-    const response = await fetch("/api/galleries/videos", {
+    const response = await fetch("/api/admin/galleries/videos", {
       method: "POST",
       body: formData,
     });

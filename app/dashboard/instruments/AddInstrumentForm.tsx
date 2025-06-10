@@ -48,7 +48,7 @@ const AddInstrumentForm = () => {
         });
 
         try {
-            const response = await fetch('/api/instruments', {
+            const response = await fetch('/api/admin/instruments', {
                 method: 'POST',
                 body: formData
             });
@@ -96,7 +96,7 @@ const AddInstrumentForm = () => {
         formData.append('instrumentName', fields.instrument_name);
 
         try {
-            const response = await fetch('/api/instruments/upload-instrument-image', {
+            const response = await fetch('/api/admin/instruments/upload-instrument-image', {
                 method: 'POST',
                 body: formData
             });

@@ -2,7 +2,7 @@
 
 import Search from "@/app/ui/components/Search"
 import AddButton from "@/app/ui/components/AddButton"
-import { fetchPhotos } from "@/lib/requests"
+import { fetchFullPhotos } from "@/lib/requests"
 import Link from "next/link"
 import { ChangeEvent, useEffect, useState } from "react"
 import Image from "next/image"
@@ -25,7 +25,7 @@ const Photos = () => {
     useEffect(() => {
         const loadPhotos = async () => {
             try {
-                const data = await fetchPhotos()
+                const data = await fetchFullPhotos()
                 setPhotos(data)
                 setFilteredPhotos(data);
             } catch (error) {
@@ -53,7 +53,7 @@ const Photos = () => {
 
               
               try {
-                  const res = await fetch(`/api/galleries/photos/${photoId}`, {
+                  const res = await fetch(`/api/admin/galleries/photos/${photoId}`, {
                       method: "DELETE"
                     })
                     

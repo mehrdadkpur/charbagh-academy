@@ -27,7 +27,7 @@ const AddPhotoForm = () => {
 
   useEffect(() => {
     const fetchCategories = async () => {
-        const response = await fetch('/api/categories')
+        const response = await fetch('/api/public/categories')
         const data = await response.json();
         setCategories(data);
 
@@ -44,6 +44,22 @@ const AddPhotoForm = () => {
   const handleDateChange = (gregorianDate: string) => {
     setFields(prev => ({ ...prev, photoDate: gregorianDate }))
   }
+
+  const handleCategoryChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    const selectedId = parseInt(e.target.value);
+    const selectedCategory = categories.find(cat => cat.id === selectedId);
+  
+    if (selectedCategory) {
+      setFields(prev => ({
+        ...prev,
+        category: {
+          id: selectedCategory.id,
+          category_name: selectedCategory.category_name
+        }
+      }));
+    }
+  };
+  
 
   const handlePhotoUpload = async (e:ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -69,13 +85,14 @@ const AddPhotoForm = () => {
      formData.append('previousUrl', fields.url);
  }
     try {
-      const response = await fetch("/api/galleries/upload-gallery-photo", {
+      const response = await fetch("/api/admin/galleries/upload-gallery-photo", {
         method: "POST",
         body: formData,
       });
 
       const data = await response.json();
       if (data.url) {
+        toast.success("بارگذاری فایل موفقیت آمیز بود.")
         setFields((prev) => ({ ...prev, url: data.url }));
       }
     } catch (error) {
@@ -91,6 +108,7 @@ const AddPhotoForm = () => {
     
     if (fields.category) {
       const categoryId = fields.category.id;
+      
       if (!isNaN(categoryId)) {
         formData.append("categoryId", String(categoryId));
       } else {
@@ -113,7 +131,7 @@ const AddPhotoForm = () => {
     }    
   
     try {
-      const response = await fetch("/api/galleries/photos", {
+      const response = await fetch("/api/admin/galleries/photos", {
         method: "POST",
         body: formData,
       });
@@ -128,6 +146,7 @@ const AddPhotoForm = () => {
       toast.error("خطا در ثبت عکس");
     }
   };
+  
   
   return (
     <form onSubmit={handleSubmit} className="w-full flex justify-center items-start flex-col gap-y-5">
@@ -161,14 +180,10 @@ const AddPhotoForm = () => {
         />
       </div>
       <div className="w-full flex justify-center items-center gap-x-2 ">
-                    <label className="w-1/3">تاریخ تهیه عکس:</label>
-                    <div className="w-2/3">
-                    <ShamsiDatePicker
-                    onBirthDateChange={handleDateChange}
-                    initialDate={fields.photoDate ? new Date(fields.photoDate) : new Date()}
-                    fieldName="photoDate"
-/>
-                    </div>
+        <label className="w-1/3">تاریخ تهیه عکس:</label>
+        <div className="w-2/3">
+          <ShamsiDatePicker onChange={handleDateChange} initialDate={fields.photoDate ? new Date(fields.photoDate) : new Date()} />
+        </div>
       </div> 
       <div className="w-full flex justify-center items-center gap-x-2">
           <label className="w-1/3" htmlFor="category">
@@ -178,19 +193,20 @@ const AddPhotoForm = () => {
             name="category"
             className="w-2/3 h-12 border p-3 bg-gray-50 dark:bg-gray-700"
             required
-            onChange={handleChange}
+            onChange={handleCategoryChange}
+            value={fields.category?.id || ""}
           >
-            <option value="">دسته بندی</option>
-            {categories && categories.map((category) => (
-            <option key={category.id} value={category.id}>
-              {category.category_name}
-            </option>
+            <option value="">دسته‌بندی</option>
+            {categories.map((category) => (
+              <option key={category.id} value={category.id}>
+                {category.category_name}
+              </option>
             ))}
-
           </select>
+
       </div>
       <UploadInput uploadedImage={imagePreview} handleImageUpload={handlePhotoUpload} uploading={uploading} />
-      <div className="w-1/2 flex justify-center items-center flex-col gap-y-3">
+      <div className="w-full flex justify-center items-center flex-col gap-y-3">
         <button
           type="submit"
           className="w-full p-3 bg-green-600 rounded-lg text-center text-white hover:bg-green-700 transition-colors"
@@ -198,7 +214,7 @@ const AddPhotoForm = () => {
           ایجاد عکس
         </button>
         <Link
-          href="/dashboard/gallery/photos"
+          href="/dashboard/galleries/photos"
           className="w-full p-3 bg-red-600 rounded-lg text-center text-white hover:bg-red-700 transition-colors"
         >
           انصراف

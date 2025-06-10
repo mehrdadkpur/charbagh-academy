@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import { useState,useEffect } from "react";
-import { fetchVideo } from "@/lib/requests";
+import { fetchFullVideo } from "@/lib/requests";
 import Loading from "@/app/loading";
 import { shamsiDate } from "@/lib/shamsiDate";
 
@@ -16,7 +16,7 @@ const ViewVideo = () => {
         const fetchVideoData = async ()=>{
             if(!id) return;
            try{
-               const video = await fetchVideo(id)
+               const video = await fetchFullVideo(id)
                setVideo(video);
                
            } catch(error){

@@ -11,7 +11,7 @@ const Navigation = () => {
     return ( 
         <div className="hidden md:flex items-center gap-x-6 lg:gap-x-10 p-4  w-full xl:w-[88%]">
             <Link href={'/'}>
-                <Image width={65} height={65} className="w-[65px] lg:w-[75px] xl:w-[92px]"  src="/images/logo.png" alt="logo" />
+                <Image width={65} height={65} className="w-auto h-auto"  src="/images/logo.png" alt="logo" />
             </Link>
             <div className="w-full  flex justify-between items-center gap-x-4 p-2 ">
                     <ul className="flex items-center gap-x-3 lg:gap-x-6 xl:gap-x-8 font-DanaMedium text-sm lg:text-lg xl:text-xl text-gray-900 dark:text-gray-50 ">

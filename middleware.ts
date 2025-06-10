@@ -4,8 +4,15 @@ import { verifyToken } from './lib/jwt'
 
 interface DecodedToken {
   role: string
-  isAdmin: boolean
 }
+
+const accessControl = [
+  { prefix: '/user', roles: ['TEACHER', 'STUDENT', 'ADMIN'] },
+  { prefix: '/dashboard', roles: ['ADMIN'] },
+  { prefix: '/songs', roles: ['TEACHER', 'STUDENT', 'ADMIN'] },
+  { prefix: '/api/admin', roles: ['ADMIN'] },
+  { prefix: '/api/user', roles: ['TEACHER', 'STUDENT', 'ADMIN'] },
+]
 
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
@@ -13,14 +20,9 @@ export async function middleware(request: NextRequest) {
   const userAgent = request.headers.get('user-agent') || ''
   const isMobile = /mobile/i.test(userAgent)
 
-  const protectedRoutes = ['/user', '/dashboard', '/songs']
-  const isProtected = protectedRoutes.some(route => pathname.startsWith(route))
+  const route = accessControl.find(r => pathname.startsWith(r.prefix))
 
-  if (!isProtected) return NextResponse.next()
-  
-  if (isMobile && pathname.startsWith('/dashboard')) {
-    return NextResponse.redirect(new URL('/unaccess', request.url))
-  }
+  if (!route) return NextResponse.next()
 
   if (!token) {
     return NextResponse.redirect(new URL('/login', request.url))
@@ -28,23 +30,17 @@ export async function middleware(request: NextRequest) {
 
   try {
     const decoded = await verifyToken(token) as unknown as DecodedToken
-    const { role, isAdmin } = decoded
+    const { role } = decoded
 
-    if (isAdmin) return NextResponse.next()
-
-    if (pathname.startsWith('/user') && ['TEACHER', 'STUDENT'].includes(role)) {
-      return NextResponse.next()
+    if (!route.roles.includes(role)) {
+      return NextResponse.redirect(new URL('/', request.url))
     }
 
-    if (pathname.startsWith('/dashboard') && role === 'ADMIN') {
-      return NextResponse.next()
+    if (pathname.startsWith('/dashboard') && isMobile) {
+      return NextResponse.redirect(new URL('/unaccess', request.url))
     }
 
-    if (pathname.startsWith('/songs')) {
-      return NextResponse.next()
-    }
-
-    return NextResponse.redirect(new URL('/', request.url))
+    return NextResponse.next()
   } catch (error) {
     console.error('Token verification failed:', error)
     return NextResponse.redirect(new URL('/login', request.url))
@@ -52,5 +48,11 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ['/songs/:path*', '/dashboard/:path*', '/user/:path*']
+  matcher: [
+    '/user/:path*',
+    '/dashboard/:path*',
+    '/songs/:path*',
+    '/api/admin/:path*',
+    '/api/user/:path*'
+  ]
 }

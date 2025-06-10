@@ -125,7 +125,7 @@ const MobileNav = () => {
                 </ul>
             </div>
             <div className="w-12 ">
-                <Image width={48} height={48} src="/images/logo.png" alt="" />
+                <Image width={48} height={48} src="/images/logo.png" className="w-auto h-auto" alt="logo" />
             </div>
             <div>
                 <ProfileNav/>

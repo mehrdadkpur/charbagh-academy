@@ -26,7 +26,7 @@ const EditSongForm = () => {
     useEffect(() => {
         const fetchSong = async () => {
             try {
-              const response = await fetch(`/api/instruments/${instrumentId}/books/${bookId}/songs/${songId}`)
+              const response = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}/songs/${songId}`)
               const data = await response.json();
           
               setFields(data)
@@ -60,7 +60,7 @@ const EditSongForm = () => {
         formData.append('previousUrl', fields.song_url)
         
         try {
-            const response = await fetch('/api/instruments/upload-song', {
+            const response = await fetch('/api/admin/instruments/upload-song', {
                 method: 'POST',
                 body: formData
             })
@@ -80,7 +80,7 @@ const EditSongForm = () => {
     const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
         try {
-            const response = await fetch(`/api/instruments/${instrumentId}/books/${bookId}/songs/${songId}`, {
+            const response = await fetch(`/api/admin/instruments/${instrumentId}/books/${bookId}/songs/${songId}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

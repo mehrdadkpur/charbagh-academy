@@ -56,7 +56,7 @@ const AddBlogForm = ({user}: {user:IUser}) => {
           }
 
         try {
-            const response = await fetch("/api/blogs", {
+            const response = await fetch("/api/user/blogs", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -90,7 +90,7 @@ const AddBlogForm = ({user}: {user:IUser}) => {
         formData.append('blog_title', fields.blog_title)
 
         try {
-            const response = await fetch('/api/blogs/upload-blog-image', {
+            const response = await fetch('/api/user/blogs/upload-blog-image', {
                 method: 'POST',
                 body: formData
             })

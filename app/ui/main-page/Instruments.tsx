@@ -18,7 +18,7 @@ const Instruments = async () => {
                             <div className="w-full text-[#152422] dark:text-gray-50 md:text-lg font-DanaMedium text-center px-2 ">اگه تا حالا هیچ ارتباطی با موسیقی و ساز نداشتی هیچ اشکالی نداره. ما اینحا هستیم تا پا به پای شما مسیر یادگیری یک ساز را از اول تا حرفه ای شدن به شما یاد بدیم. برای آشنایی با انواع ساز یکی را انتخاب کن یا اینکه دکمه بزن بریم را فشار بده.</div>
                             <Link href='/instruments' className="font-DanaMedium bg-mango dark:bg-elf md:text-2xl text-gray-900 dark:text-gray-50 text-sm p-3 mb-4 rounded-full hover:bg-elf dark:hover:bg-mango hover:scale-105 ease-in-out transition-all duration-700">بزن بریم</Link>
                         </div>
-                        <div className="left lg:w-2/3 h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-x-8 gap-y-5 md:gap-y-3">
+                        <div className="left lg:w-2/3 h-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 xl:grid-cols-3 md:gap-x-20 gap-y-5 md:gap-y-3">
                             {instruments?.map((instrument:Instrument) => (
                                 <InstrumentCard instrument={instrument} key={instrument.id}/>
                             ))}

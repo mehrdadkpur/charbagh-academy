@@ -4,11 +4,12 @@ import RoutesHeader from "@/app/ui/components/RoutesHeader";
 import { useEffect, useState, useCallback } from "react";
 import { useParams } from "next/navigation";
 import Image from "next/image";
-import { fetchInstrument } from "../../../lib/requests";
+import { fetchFullInstrument } from "@/lib/requests";
 import Loading from "@/app/loading";
 import Modal from 'react-modal';
 import Link from "next/link";
 import ErrorHandling from "@/app/ui/components/ErrorHandling";
+import AudioPlayerModal from "@/app/ui/components/AudioPlayerModal";
 
 const Songs = () => {
     const { id } = useParams();
@@ -23,7 +24,7 @@ const Songs = () => {
         const fetchSongData = async () => {
             if (!id) return;
             try {
-                const data = await fetchInstrument(id);
+                const data = await fetchFullInstrument(id);
                 setInstruments(data);
                 setBooks(data.books);
             } catch (error) {
@@ -130,36 +131,7 @@ const Songs = () => {
                     </div>
                 </div>
             </div>
-
-            <Modal
-                ariaHideApp={false}
-                isOpen={modalIsOpen}
-                onRequestClose={closeModal}
-                contentLabel="Music Player"
-                className="absolute md:w-[500px] flex flex-col justify-center items-center font-Dana gap-y-3 top-2/3 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-mango-100 dark:bg-gray-700 p-5 rounded-lg shadow-lg"
-                overlayClassName="modal-overlay"
-            >
-                <button onClick={closeModal} className="w-full flex justify-end cursor-pointer">
-                    <svg fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6 dark:text-gray-50">
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M6 18 18 6M6 6l12 12" />
-                    </svg>
-                </button>
-                {selectedSong && (
-                    <div className="flex justify-center items-center flex-col gap-y-3 dark:text-gray-50">
-                        <h2>{selectedSong.song_title}</h2>
-                        <p>{selectedSong.song_artist}</p>
-                        <Image
-                            width={48}
-                            height={48}
-                            src={selectedSong.song_img || "/images/songs/cover.png"}
-                            alt={selectedSong.song_title}
-                            className="rounded-full"
-                        />
-                        <audio autoPlay controls src={selectedSong.song_url}></audio>
-                    </div>
-                )}
-            </Modal>
-
+             <AudioPlayerModal modalIsOpen={modalIsOpen} closeModal={closeModal} selectedSong={selectedSong}/>           
             <Image width={1920} height={134} src="/images/shapes/footer-1.png" alt="footer-shape" />
         </div>
     );

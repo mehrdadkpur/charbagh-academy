@@ -44,7 +44,7 @@ const EditStudentForm = () => {
   useEffect(() => {
     const getInstruments = async () => {
       try {
-        const response = await fetch("/api/instruments");
+        const response = await fetch("/api/public/instruments");
         if (response.ok) {
           const data = await response.json();
           setInstruments(data);
@@ -64,7 +64,7 @@ const EditStudentForm = () => {
   useEffect(() => {
     const fetchStudent = async () => {
       try {
-        const response = await fetch(`/api/students/${id}`);
+        const response = await fetch(`/api/admin/students/${id}`);
         if (!response.ok) {
           throw new Error('Failed to fetch Student data');
         }
@@ -147,7 +147,7 @@ const EditStudentForm = () => {
     
     try {
       const submitData = { ...fields };
-      const response = await fetch(`/api/students/${id}`, {
+      const response = await fetch(`/api/admin/students/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',

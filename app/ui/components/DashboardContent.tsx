@@ -46,7 +46,7 @@ const DasboardContent = () => {
     
       useEffect(() => {
         const fetchStats = async () => {
-          const response = await fetch('/api/dashboard/stats')
+          const response = await fetch('/api/admin/dashboard/stats')
           const data = await response.json()
           setStats(data)
         }

@@ -53,7 +53,7 @@ const Blog = () => {
   return (
     <section>
       <div className="w-full bg-[#F6F4EE] dark:bg-gray-900">
-        <RoutesHeader pageTitle="خبرنامه" boldText={blog.blog_title} Highlight="" />
+        <RoutesHeader pageTitle="خبرنامه" boldText="پست های منتخب" Highlight={blog.blog_title} />
         
         <div className="container relative">
           <div className="content flex justify-center items-center flex-col">

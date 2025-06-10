@@ -29,7 +29,7 @@ const Guidances = () => {
 
     const handleStatus = async (guidanceId: number) => {
         try {
-            const res = await fetch(`/api/guidances/${guidanceId}`, {
+            const res = await fetch(`/api/admin/guidances/${guidanceId}`, {
                 method: "PUT",
                 headers: {
                     'Content-Type': 'application/json'
@@ -147,8 +147,8 @@ const Guidances = () => {
                 <div className="flex items-center gap-2">
                     <button 
                         onClick={() => handleStatus(guidance.id)}
-                        disabled={guidance.status === "PENDING"}
-                        className={`px-3 py-1.5 rounded-lg text-white transition-colors ${
+                        disabled={guidance.status === "DEACTIVE"}
+                        className={`px-3 py-1.5 rounded-lg text-white transition-colors cursor-pointer ${
                             guidance.status === "DEACTIVE" 
                                 ? "bg-gray-400 cursor-not-allowed" 
                                 : "bg-green-700 hover:bg-green-800"

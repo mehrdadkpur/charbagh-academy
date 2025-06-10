@@ -3,7 +3,7 @@
 import Link from "next/link"
 import { useParams } from "next/navigation"
 import { useState, useEffect } from "react"
-import { fetchCourse } from "@/lib/requests"
+import { fetchFullCourse } from "@/lib/requests"
 import Loading from "@/app/loading"
 import Image from "next/image"
 import { ICourse } from "@/lib/types"
@@ -18,7 +18,7 @@ const ViewCourse = () => {
             if (!id) return
 
             try {
-                const courseData = await fetchCourse(id as unknown as number)
+                const courseData = await fetchFullCourse(id as string)
                 setCourse(courseData)
             } catch (error) {
                 console.log((error as Error).message)

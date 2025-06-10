@@ -28,7 +28,7 @@ const AddBookForm = () => {
         e.preventDefault()
           
         try {
-            const response = await fetch(`/api/instruments/${instrumentId}/books`, {
+            const response = await fetch(`/api/admin/instruments/${instrumentId}/books`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify(fields),

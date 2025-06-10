@@ -1,5 +1,6 @@
 import RoutesHeader from "@/app/ui/components/RoutesHeader";
 import VideoGallery from "../../ui/components/VideoGallery"
+import Image from "next/image";
 
 export const metadata = {
     title: 'آموزشگاه چهارباغ | گالری فیلم',
@@ -11,6 +12,8 @@ const VideoGalleryPage = () => {
         <div className="bg-[#F6F4EE] dark:bg-gray-900">
             <RoutesHeader pageTitle={'گالری'} boldText={'گالـــــری'} Highlight={' فیلم های برتر'}/>
             <VideoGallery/>
+          <Image width={1920} height={134} src="/images/shapes/footer-1.png" alt="footer" />
+
         </div>
      );
 }

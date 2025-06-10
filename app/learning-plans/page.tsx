@@ -21,7 +21,7 @@ const Plans = () => {
                                 <div className=" absolute w-[68px] h-[68px] flex justify-center items-center rounded-full bottom-[-34px] right-[160px] bg-[#F6F4EE]">
                                     <div className=" w-[47px] h-[47px] rounded-full bg-white flex justify-center items-center">
                                         <svg fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="#018A75" className="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
                                         </svg>
                                     </div>
                                 </div>
@@ -40,7 +40,7 @@ const Plans = () => {
                                 <div className=" absolute w-[68px] h-[68px] flex justify-center items-center rounded-full bottom-[-34px] right-[160px] bg-[#F6F4EE]">
                                     <div className=" w-[47px] h-[47px] rounded-full bg-white flex justify-center items-center">
                                         <svg fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="#018A75" className="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
                                         </svg>
                                     </div>
                                 </div>
@@ -59,7 +59,7 @@ const Plans = () => {
                                 <div className=" absolute w-[68px] h-[68px] flex justify-center items-center rounded-full bottom-[-34px] right-[160px] bg-[#F6F4EE]">
                                     <div className=" w-[47px] h-[47px] rounded-full bg-white flex justify-center items-center">
                                         <svg fill="none" viewBox="0 0 24 24" strokeWidth="3" stroke="#018A75" className="size-6">
-                                            <path stroke-linecap="round" stroke-linejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
+                                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 15.75 7.5-7.5 7.5 7.5" />
                                         </svg>
                                     </div>
                                 </div>

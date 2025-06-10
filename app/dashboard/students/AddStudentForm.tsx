@@ -45,7 +45,7 @@ const AddStudentForm = () => {
     useEffect(() => {
         const getInstruments = async () => {
             try {
-                const response = await fetch("/api/instruments");
+                const response = await fetch("/api/public/instruments");
                 if (response.ok) {
                     const data = await response.json();
                     setInstruments(data);
@@ -79,7 +79,7 @@ const AddStudentForm = () => {
       setLoading(true);
         
       try {
-        const response = await fetch("/api/students", {
+        const response = await fetch("/api/admin/students", {
           method: "POST",
           headers: {
             'Content-Type': 'application/json'

@@ -1,6 +1,7 @@
 "use client"
 import { useEffect, useState } from 'react'
 import { IVideo } from '@/lib/types'
+import Link from 'next/link'
 
 export default function VideoGallery() {
     const [selectedCategory, setSelectedCategory] = useState('all')
@@ -12,7 +13,7 @@ export default function VideoGallery() {
 
     useEffect(() => {
         const fetchVideosData = async () => {
-            const response = await fetch("/api/galleries/videos")
+            const response = await fetch("/api/public/galleries/videos")
             const data = await response.json()
             setVideos(data || []) 
         }
@@ -22,7 +23,7 @@ export default function VideoGallery() {
 
     useEffect(() => {
         const fetchCategories = async () => {
-            const response = await fetch('/api/categories')
+            const response = await fetch('/api/public/categories')
             const data = await response.json()
 
             // Use only category names as strings
@@ -37,7 +38,7 @@ export default function VideoGallery() {
 
     const handleCategoryClick = async (category: string) => {
         setSelectedCategory(category)
-        setCurrentPage(1)  // Reset to first page when category changes
+        setCurrentPage(1)
     }
 
     const filteredVideos = selectedCategory === 'all' 
@@ -84,7 +85,7 @@ export default function VideoGallery() {
     )
 
     return (
-        <div className="flex">
+        <div className="flex justify-center flex-col mb-10">
             <main className="flex-1 p-4">
                 {/* Category Buttons */}
                 <div className="flex items-center justify-center py-4 md:py-8 flex-wrap font-DanaMedium">
@@ -126,6 +127,9 @@ export default function VideoGallery() {
                     </>
                 )}
             </main>
+            <div className="w-40 mx-auto mt-5 font-DanaMedium">
+                <Link href={"/galleries"} className="w-full p-2 bg-red-600 rounded-lg text-xl text-center text-white" > بازگشت به گالری</Link>
+            </div>
         </div>
     )
 }

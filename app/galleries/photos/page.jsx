@@ -12,7 +12,7 @@ const PhotoGalleryPage = () => {
         <div className="bg-[#F6F4EE] dark:bg-gray-900">
             <RoutesHeader pageTitle={'گالری'} boldText={'گالـــــری'} Highlight={' عکس های برتر'}/>
             <PhotoGallery/>
-          <Image width={1920} height={134} src="/images/shapes/footer-1.png" alt="footer" />
+            <Image width={1920} height={134} src="/images/shapes/footer-1.png" alt="footer" />
         </div>
      );
 }
